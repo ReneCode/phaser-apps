@@ -29,3 +29,48 @@ myGame.wall = game.add.sprite(200,0,'wall');
 // enable both sprites for collision
 game.physics.enable(myGame.player, Phaser.Physics.ARCADE);
 game.physics.enable(myGame.wall, Phaser.Physics.ARCADE);
+
+--------
+
+create a sprite out of graphics (http://www.html5gamedevs.com/topic/6476-collision-with-gameaddgraphics-and-a-sprite/)
+
+
+shapeGr = game.add.graphics(); 
+shapeGr.moveTo(250, 100);
+shapeGr.lineTo(250, 0);
+
+// Remove the 10 pixel padding added to graphics by default
+shapeGr.boundsPadding = 0;
+
+// Create an empty sprite as a container
+shapeSprite = game.add.sprite(0, 0);
+
+// Add the graphics to the sprite as a child
+shapeSprite.addChild(shapeGr);
+
+// Enable physics on the sprite (as graphics objects cannot have bodies applied)
+game.physics.enable(shapeSprite, Phaser.Physics.ARCADE);
+
+// Overlap should now work
+game.physics.arcade.overlap(thing.body, shapeSprite, gotHit, null, this);
+
+---------
+
+create a sprite out of a painted bitmap
+
+// graphic-block
+var graphBlock = game.add.bitmapData(32,32);
+// filled rectangle
+graphBlock.ctx.rect(0,0,32,32);
+graphBlock.ctx.fillStyle = '#33eeff';
+graphBlock.ctx.fill();
+// line
+graphBlock.ctx.beginPath();
+graphBlock.ctx.moveTo(5,10);
+graphBlock.ctx.lineTo(25,10);
+graphBlock.ctx.setStrokeColor('#f00');
+graphBlock.ctx.setLineWidth(3);
+graphBlock.ctx.stroke();
+// sprite-block
+myGame.block = game.add.sprite(100,300, graphBlock);
+game.physics.enable(myGame.block, Phaser.Physics.ARCADE);

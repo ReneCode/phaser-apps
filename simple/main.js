@@ -42,6 +42,7 @@ var preload = function(game) {
 }
 
 var create = function(game) {
+    game.physics.startSystem(Phaser.Physics.ARCADE);
 
   /*  
     // add a player sprite to give context to the movement
@@ -51,25 +52,46 @@ var create = function(game) {
     myGame.player.endFill();
 
     game.physics.arcade.enableBody(myGame.player);
-
-    myGame.wall = game.add.graphics(100,0)
-   // myGame.wall.lineStyle(5, 0xf40022);
-   // myGame.wall.moveTo(0,0);
-   // myGame.wall.lineTo(0,100);
-    myGame.wall.beginFill(0x008888);
-    myGame.wall.drawCircle(0,0,40);
-    myGame.wall.endFill();
-    myGame.wall.enableBody = true;
 */
+    var graph = game.add.graphics()
+    graph.lineStyle(5, 0xf40022);
+    graph.moveTo(0,0);
+    graph.lineTo(0,100);
 
-    game.physics.startSystem(Phaser.Physics.ARCADE);
+    graph.boundsPadding = 0;
+    myGame.wall = game.add.sprite(300,50);
+    myGame.wall.key = "wall-1";
+    myGame.wall.addChild(graph);
+
+
+//    var group = game.add.group();
+//    group.enableBody = true;
+
+    // graphic-block
+    var graphBlock = game.add.bitmapData(32,32);
+    graphBlock.ctx.rect(0,0,32,32);
+    graphBlock.ctx.fillStyle = '#33eeff';
+    graphBlock.ctx.fill();
+    graphBlock.ctx.beginPath();
+    graphBlock.ctx.moveTo(5,10);
+    graphBlock.ctx.lineTo(25,10);
+    graphBlock.ctx.setStrokeColor('#f00');
+    graphBlock.ctx.setLineWidth(3);
+    graphBlock.ctx.stroke();
+    // sprite-block
+    myGame.block = game.add.sprite(100,300, graphBlock);
+    game.physics.enable(myGame.block, Phaser.Physics.ARCADE);
+
+//    platform1 = game.add.sprite(game.world.centerX - 200, game.world.centerY + 64, platformbmd, 0, group);
+
+
 
     myGame.player = game.add.sprite(0,0,'player');
     myGame.player.anchor.setTo(0.5, 0.5);
-//    myGame.player.enableBody = true;
-    myGame.wall = game.add.sprite(200,0,'wall');
+//    myGame.wall = game.add.sprite(200,0,'wall');
 //    myGame.wall.enableBody = true;
 
+    // enable both sprites for collision
     game.physics.enable(myGame.player, Phaser.Physics.ARCADE);
     game.physics.enable(myGame.wall, Phaser.Physics.ARCADE);
     myGame.player.body.velocity.x = 5;
@@ -101,6 +123,7 @@ var collision = function(a,b) {
 var update = function(game) {    
 
     game.physics.arcade.overlap(myGame.player, myGame.wall, collision, null, this);
+    game.physics.arcade.overlap(myGame.player, myGame.block, collision, null, this);
 
 
     // movement
