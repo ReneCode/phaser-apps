@@ -38,12 +38,16 @@ var preload = function(game) {
 
     game.load.image('player', 'assets/circleBlue.png');
     game.load.image('wall', 'assets/circleA.png');
-
+    game.load.spritesheet('characters', 'assets/characters-24-32.gif', 24, 32);
 }
 
 var create = function(game) {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
+    for (var i=1; i<20; i++) {
+        game.add.sprite(10+i*30, 70, 'characters', i*30);
+    }
+    
   /*  
     // add a player sprite to give context to the movement
     myGame.player = game.add.graphics(0,100);
@@ -145,5 +149,5 @@ var update = function(game) {
 }
 
 
-var game = new Phaser.Game(500, 400, Phaser.AUTO, 'phaser-example', 
+var game = new Phaser.Game(800, 400, Phaser.AUTO, 'phaser-example', 
     { preload: preload, create: create, update: update});

@@ -58,6 +58,7 @@ game.physics.arcade.overlap(thing.body, shapeSprite, gotHit, null, this);
 
 create a sprite out of a painted bitmap
 
+```javascript
 // graphic-block
 var graphBlock = game.add.bitmapData(32,32);
 // filled rectangle
@@ -74,3 +75,15 @@ graphBlock.ctx.stroke();
 // sprite-block
 myGame.block = game.add.sprite(100,300, graphBlock);
 game.physics.enable(myGame.block, Phaser.Physics.ARCADE);
+```
+------
+
+Sprite sheet
+
+```javascript
+// this is a big picture, with several elements,
+// each 24x32 size
+game.load.spritesheet('characters', 'assets/characters-24-32.gif', 24, 32);
+// that is the way to get an element out of the picture. idx = index starts top left
+game.add.sprite(10+i*30, 70, 'characters', idx);
+```
