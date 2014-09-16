@@ -1,15 +1,18 @@
 phaser-apps
 ===========
 
-apps bases on the js-framework phaser
+(formating readme.md: see: https://help.github.com/articles/github-flavored-markdown)
 
+apps bases on the js-framework phaser
+```javascript
 // set a minimum and maximum scale value
 worldScale = Phaser.Math.clamp(worldScale, 0.25, 2);
-
+```
 --------
 
 create graphic, can be moved by player.x .y
 
+```javascript
 player = game.add.graphics(0,100);
 player.beginFill(0xddffaa);
 player.drawCircle(0, 0, 20);
@@ -18,9 +21,11 @@ player.endFill();
 player.lineStyle(5, 0xf40022);
 player.moveTo(10,10);
 player.lineTo(50,100);
+```
 
 ------
 
+```javascript
 myGame.player = game.add.sprite(0,0,'player');
 // handle that sprite in the middle
 myGame.player.anchor.setTo(0.5, 0.5);
@@ -29,12 +34,14 @@ myGame.wall = game.add.sprite(200,0,'wall');
 // enable both sprites for collision
 game.physics.enable(myGame.player, Phaser.Physics.ARCADE);
 game.physics.enable(myGame.wall, Phaser.Physics.ARCADE);
+```
 
 --------
 
 create a sprite out of graphics (http://www.html5gamedevs.com/topic/6476-collision-with-gameaddgraphics-and-a-sprite/)
 
 
+```javascript
 shapeGr = game.add.graphics(); 
 shapeGr.moveTo(250, 100);
 shapeGr.lineTo(250, 0);
@@ -53,7 +60,7 @@ game.physics.enable(shapeSprite, Phaser.Physics.ARCADE);
 
 // Overlap should now work
 game.physics.arcade.overlap(thing.body, shapeSprite, gotHit, null, this);
-
+```
 ---------
 
 create a sprite out of a painted bitmap

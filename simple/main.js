@@ -36,7 +36,7 @@ var preload = function(game) {
     myGame.worldHeight = 2000;
 
 
-    game.load.image('player', 'assets/circleBlue.png');
+    game.load.image('player', 'assets/circleYellowSmall.png');
     game.load.image('wall', 'assets/circleA.png');
     game.load.spritesheet('characters', 'assets/characters-24-32.gif', 24, 32);
 }
@@ -45,7 +45,7 @@ var create = function(game) {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     for (var i=1; i<20; i++) {
-        game.add.sprite(10+i*30, 70, 'characters', i*30);
+        game.add.sprite(10+i*30, 70, 'characters', i);
     }
     
   /*  
