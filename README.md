@@ -59,6 +59,7 @@ shapeSprite.addChild(shapeGr);
 game.physics.enable(shapeSprite, Phaser.Physics.ARCADE);
 
 // Overlap should now work
+// call that in the update() method
 game.physics.arcade.overlap(thing.body, shapeSprite, gotHit, null, this);
 ```
 ---------
@@ -94,3 +95,18 @@ game.load.spritesheet('characters', 'assets/characters-24-32.gif', 24, 32);
 // that is the way to get an element out of the picture. idx = index starts top left
 game.add.sprite(10+i*30, 70, 'characters', idx);
 ```
+
+------
+
+grouping
+
+```javascript
+// create a new group
+myGame.group = game.add.group();
+// if you want to test collision with group elements than enableBody
+myGame.group.enableBody = true;
+for (var i=0; i<5; i++) {
+	// add element (sprite) to the group
+    myGame.group.create(20 + i*50, 50,  'characters', 60+i);
+}
+

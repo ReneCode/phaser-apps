@@ -44,10 +44,19 @@ var preload = function(game) {
 var create = function(game) {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
+    /*
     for (var i=1; i<20; i++) {
         game.add.sprite(10+i*30, 70, 'characters', i);
     }
+    */
     
+    myGame.group = game.add.group();
+    myGame.group.enableBody = true;
+    for (var i=0; i<5; i++) {
+        myGame.group.create(20 + i*50, 50,  'characters', 60+i);
+    }
+
+
   /*  
     // add a player sprite to give context to the movement
     myGame.player = game.add.graphics(0,100);
@@ -90,7 +99,7 @@ var create = function(game) {
 
 
 
-    myGame.player = game.add.sprite(0,0,'player');
+    myGame.player = game.add.sprite(0,100,'player');
     myGame.player.anchor.setTo(0.5, 0.5);
 //    myGame.wall = game.add.sprite(200,0,'wall');
 //    myGame.wall.enableBody = true;
@@ -126,9 +135,9 @@ var collision = function(a,b) {
 
 var update = function(game) {    
 
-    game.physics.arcade.overlap(myGame.player, myGame.wall, collision, null, this);
-    game.physics.arcade.overlap(myGame.player, myGame.block, collision, null, this);
-
+//    game.physics.arcade.overlap(myGame.player, myGame.wall, collision, null, this);
+//    game.physics.arcade.overlap(myGame.player, myGame.block, collision, null, this);
+    game.physics.arcade.overlap(myGame.player, myGame.group, collision, null, this);
 
     // movement
     if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
@@ -149,5 +158,5 @@ var update = function(game) {
 }
 
 
-var game = new Phaser.Game(800, 400, Phaser.AUTO, 'phaser-example', 
+var game = new Phaser.Game(500, 400, Phaser.AUTO, 'phaser-example', 
     { preload: preload, create: create, update: update});
