@@ -27,28 +27,40 @@ function create() {
 }
 */
 
+var myGame = {};
+
 // ----------------------
+
+
+function createCircle(color) {
+    var graphic = game.add.bitmapData(32,32);
+    graphic.ctx.arc(16,16,10,0,30);
+    graphic.ctx.fillStyle = color;
+    graphic.ctx.fill();
+    return graphic;
+}
+
+function createGrid(dx, dy) {
+    
+}
+
 
 function preload(game) {
 //    game.time.advancedTiming = true;
 }
 
 function create(game) {
-    // create a reusable point for bounds checking later
-    
-    // add a player sprite to give context to the movement
-    player = game.add.graphics(20, 20);
-    player.beginFill(0xff0000);
-    player.drawCircle(0, 0, 30);
-    player.endFill();
-
-//    game.physics.enable(player, Phaser.Physics.ARCADE);
-
- //   player.body.x = 50;
+    myGame.b1 = game.add.sprite(100,300, createCircle('#f00'));
+    myGame.b2 = game.add.sprite(200,300, createCircle('#ff0'));
+    game.physics.enable(myGame.b1, Phaser.Physics.ARCADE);
+    game.physics.enable(myGame.b2, Phaser.Physics.ARCADE);
 }
 
 function update(game) {  
-    player.x += 1;
+    myGame.b1.body.velocity.x = 4;
+    myGame.b1.body.velocity.y = -1;
+    myGame.b2.body.velocity.x = -2;
+    myGame.b2.body.velocity.y = -3;
 }
 
 

@@ -29,6 +29,14 @@ function create() {
 
 var myGame = {};
 
+
+function randomColor() {
+    var r = Math.random() * 255;
+    var g = Math.random() * 255;
+    var b = Math.random() * 255;
+    return r*255*255 + g*255 + b;
+}
+
 var preload = function(game) {
     game.time.advancedTiming = true;
     myGame.xyDelta = 2;
@@ -67,7 +75,7 @@ var create = function(game) {
     game.physics.arcade.enableBody(myGame.player);
 */
     var graph = game.add.graphics()
-    graph.lineStyle(5, 0xf40022);
+    graph.lineStyle(5, randomColor());
     graph.moveTo(0,0);
     graph.lineTo(0,100);
 
@@ -124,8 +132,8 @@ var create = function(game) {
     game.camera.y = (game.height * -0.5); 
 
     game.camera.width = 200;
+    */
 //    myGame.player.x = 0;
-*/
 }
 
 var collision = function(a,b) {
@@ -152,11 +160,15 @@ var update = function(game) {
     else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
       myGame.player.x += myGame.xyDelta;
     }
-
-
-
 }
 
 
+function render() {
+    game.debug.spriteCoords(myGame.player, 32, 32);
+}
+
 var game = new Phaser.Game(500, 400, Phaser.AUTO, 'phaser-example', 
-    { preload: preload, create: create, update: update});
+    { preload: preload, 
+      create: create, 
+      update: update,
+      render: render});
