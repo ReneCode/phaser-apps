@@ -1,42 +1,59 @@
 
+
+function TempLine(x1, y1, x2, y2) {
+    if (x1) {
+        this._gr = this.update(x1, y1, x2, y2);
+    }
+
+    this.update = function(x1, y1, x2, y2) {
+        if (this._gr) {
+            this._gr.destroy();
+        }
+        this._gr = game.add.graphics(0,0);
+        this._gr.lineStyle(2, 0x00ffdd, 1);
+        this._gr.moveTo(x1,y1);
+        this._gr.lineTo(x2, y2);
+    }
+}
+
 function Item(sprite, name) {
     this._sprite = sprite;
     this._name = name;
     this._target = {};
-    this._speed = 10;
+    this._speed = 0.2;
+    this._tmpLine = new TempLine();
 
 
     this.targetReached = function() {
-        var rec = new Phaser.Rectangle(this._sprite.body.x,
-                                       this._sprite.body.y, 1,1);
-        rec.inflate(this._sprite.body.width / 2, 
-                   this._sprite.body.height / 2);
-
-        return Phaser.Rectangle.intersects(rec, this._target);
+        return this._target.steps <= 0;
     }
 
     this.update = function()
     {
-        if (this.targetReached()) {
-            this._sprite.body.velocity.x = 0;
-            this._sprite.body.velocity.y = 0;
+        if (this._target.steps) {
+            this._target.steps--;
+
+            if (this.targetReached()) {
+            }
+            else {
+                this._sprite.reset( 
+                    this._sprite.x + this._target.dx,
+                    this._sprite.y + this._target.dy );
+            }
+
         }
     }
 
     this.moveTo = function(x, y) {
-        this._target = new Phaser.Rectangle(x, y, 0,0);
-
-
-        var dx = x - this._sprite.body.x;
-        var dy = y - this._sprite.body.y;
+        var dx = x - this._sprite.x;
+        var dy = y - this._sprite.y;
         // create unit-vector
         var len = Math.sqrt(dx*dx + dy*dy);
-        len /= this._speed;
-        dx /= len;
-        dy /= len;
-        // use the speed of the item
-        this._sprite.body.velocity.x = dx;
-        this._sprite.body.velocity.y = dy;
+        this._target.steps = len / this._speed;
+        this._target.dx = dx / this._target.steps;
+        this._target.dy = dy / this._target.steps;
+
+        this._tmpLine.update(x,y,this._sprite.x, this._sprite.y);
     }
 
     this.name = function() {
@@ -159,7 +176,12 @@ function mouseDown(ev) {
 
 
 function render() {
-    game.debug.pointer( game.input.activePointer );
+//    game.debug.pointer( game.input.activePointer );
+    if (myGame.board) {
+        var item = myGame.board.getItem('A1');
+        game.debug.spriteInfo(item._sprite, 40,40);
+
+    }
 }
 
 var game = new Phaser.Game(500, 400, Phaser.AUTO, 'phaser-example', 
