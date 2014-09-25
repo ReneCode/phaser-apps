@@ -111,4 +111,33 @@ for (var i=0; i<5; i++) {
 	// add element (sprite) to the group
     myGame.group.create(20 + i*50, 50,  'characters', 60+i);
 }
+```
+
+----
+
+pick object
+```javascript
+function create(game) {
+	....
+	// add mouse-down handler
+    game.input.onDown.add(onMouseDown, this);
+}
+
+// this method is called, if an object is picked
+function pickObject(pointer,sprite) {
+    console.log("pickObject:" + sprite.name);
+}
+
+function onMouseDown(pt) {
+	// check if the mouse picked something out of the myGame.group
+    var objs = game.physics.arcade.getObjectsUnderPointer(pt, myGame.group, pickObject, this);
+    if (objs.length > 0) {
+        console.log("item picked");
+    }
+    else {
+        console.log("nothing picked");
+    }
+}
+```
+
 

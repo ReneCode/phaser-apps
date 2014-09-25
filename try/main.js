@@ -59,6 +59,10 @@ function Item(sprite, name) {
     this.name = function() {
         return this._name;
     }
+
+    this.sprite = function() {
+        return this._sprite;
+    }
 }
 
 
@@ -76,6 +80,7 @@ function Board(game) {
         this._game.physics.enable(sprite, Phaser.Physics.ARCADE);
         var item = new Item(sprite, name);
         this._items.push(item);
+        return item;
     }
 
     this.moveItem = function(name, x, y) {
@@ -145,15 +150,20 @@ function preload(game) {
 function create(game) {
     myGame.board.createGrid(50, 50);
 
+    myGame.group = game.add.group();
+    myGame.group.enableBody = true;
+    
     myGame.board.addItem('A1', createCircle('#f0f'), 50, 150 );
 
 
-    myGame.b1 = game.add.sprite(100,300, createCircle('#f00'));
-    myGame.b2 = game.add.sprite(200,300, createCircle('#ff0'));
-    game.physics.enable(myGame.b1, Phaser.Physics.ARCADE);
-    game.physics.enable(myGame.b2, Phaser.Physics.ARCADE);
+    myGame.b1 = game.add.sprite(100,300, createCircle('#f00'), myGame.group);
+    myGame.b2 = game.add.sprite(200,300, createCircle('#ff0'), myGame.group);
+//    game.physics.enable(myGame.b1, Phaser.Physics.ARCADE);
+//    game.physics.enable(myGame.b2, Phaser.Physics.ARCADE);
 
-    game.input.mouse.mouseDownCallback = mouseDown;
+//    game.input.mouse.mouseDownCallback = mouseDown;
+    game.input.onDown.add(onMouseDown, this);
+
 
 }
 
@@ -168,10 +178,18 @@ function update(game) {
 }
 
 
-function mouseDown(ev) {
-    var x = ev.offsetX;
-    var y = ev.offsetY;
-    myGame.board.moveItem('A1', x, y);
+function pickObject() {
+    console.log("pickObject");
+}
+
+function onMouseDown(pt) {
+    myGame.board.moveItem('A1', pt.x, pt.y);
+
+    var objs = game.physics.arcade.getObjectsUnderPointer(pt, myGame.group, pickObject, this);
+
+    if (objs) {
+        console.log("cnt:" + objs.length);
+    } 
 }
 
 

@@ -27,7 +27,8 @@ function create() {
 }
 */
 
-var myGame = {};
+var myGame = {
+};
 
 
 function randomColor() {
@@ -52,70 +53,35 @@ var preload = function(game) {
 var create = function(game) {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    /*
-    for (var i=1; i<20; i++) {
-        game.add.sprite(10+i*30, 70, 'characters', i);
-    }
-    */
-    
     myGame.group = game.add.group();
+    myGame.group.name = "enemies";
     myGame.group.enableBody = true;
     for (var i=0; i<5; i++) {
-        myGame.group.create(20 + i*50, 50,  'characters', 60+i);
+        var sprite = myGame.group.create(20 + i*50, 50,  'characters', 24*i);
+        sprite.name = "A" + (i+1);
+        sprite.anchor.setTo(0.5, 0.5);
     }
 
 
-  /*  
-    // add a player sprite to give context to the movement
-    myGame.player = game.add.graphics(0,100);
-    myGame.player.beginFill(0xddffaa);
-    myGame.player.drawCircle(0, 0, 20);
-    myGame.player.endFill();
-
-    game.physics.arcade.enableBody(myGame.player);
-*/
-    var graph = game.add.graphics()
-    graph.lineStyle(5, randomColor());
-    graph.moveTo(0,0);
-    graph.lineTo(0,100);
-
-    graph.boundsPadding = 0;
-    myGame.wall = game.add.sprite(300,50);
-    myGame.wall.key = "wall-1";
-    myGame.wall.addChild(graph);
-
-
-//    var group = game.add.group();
-//    group.enableBody = true;
-
-    // graphic-block
-    var graphBlock = game.add.bitmapData(32,32);
-    graphBlock.ctx.rect(0,0,32,32);
-    graphBlock.ctx.fillStyle = '#33eeff';
-    graphBlock.ctx.fill();
-    graphBlock.ctx.beginPath();
-    graphBlock.ctx.moveTo(5,10);
-    graphBlock.ctx.lineTo(25,10);
-    graphBlock.ctx.setStrokeColor('#f00');
-    graphBlock.ctx.setLineWidth(3);
-    graphBlock.ctx.stroke();
-    // sprite-block
-    myGame.block = game.add.sprite(100,300, graphBlock);
-    game.physics.enable(myGame.block, Phaser.Physics.ARCADE);
-
-//    platform1 = game.add.sprite(game.world.centerX - 200, game.world.centerY + 64, platformbmd, 0, group);
-
+    myGame.friendGroup = game.add.group();
+    myGame.friendGroup.name = "friendGroup";
+    myGame.friendGroup.enableBody = true;
+    for (var i=0; i<5; i++) {
+        var sprite = myGame.friendGroup.create(20 + i*50, 300, 'characters', 18*24 + i);
+        sprite.name = "B" + (i+1);
+        // reference-pointer in the center
+        sprite.anchor.setTo(0.5, 0.5);
+    }
 
 
     myGame.player = game.add.sprite(0,100,'player');
     myGame.player.anchor.setTo(0.5, 0.5);
-//    myGame.wall = game.add.sprite(200,0,'wall');
-//    myGame.wall.enableBody = true;
 
     // enable both sprites for collision
     game.physics.enable(myGame.player, Phaser.Physics.ARCADE);
-    game.physics.enable(myGame.wall, Phaser.Physics.ARCADE);
     myGame.player.body.velocity.x = 5;
+
+    game.input.onDown.add(onMouseDown, this);
 
 
 /*
@@ -134,10 +100,33 @@ var create = function(game) {
     game.camera.width = 200;
     */
 //    myGame.player.x = 0;
+
+
 }
 
-var collision = function(a,b) {
-    console.log("collision:" + a.key, b.key);
+function pickSprite(pointer,sprite) {
+    myGame.pickedSprite = sprite;
+}
+
+function moveSprite(sprite, pointer) {
+    sprite.reset(pointer.x, pointer.y);
+}
+
+function onMouseDown(pointer) {
+    if (myGame.pickedSprite != undefined) {
+        // something is picked
+        moveSprite(myGame.pickedSprite, pointer);
+        myGame.pickedSprite = undefined;
+    }
+    else {
+        // nothing is picked
+        var objs = game.physics.arcade.getObjectsUnderPointer(pointer, myGame.friendGroup, pickSprite, this);
+        var objs = game.physics.arcade.getObjectsUnderPointer(pointer, myGame.group, pickSprite, this);
+    }
+}
+
+function collision(a,b) {
+    console.log("collision:" + a.name, b.name);
     b.kill();
 }
 
@@ -146,6 +135,7 @@ var update = function(game) {
 //    game.physics.arcade.overlap(myGame.player, myGame.wall, collision, null, this);
 //    game.physics.arcade.overlap(myGame.player, myGame.block, collision, null, this);
     game.physics.arcade.overlap(myGame.player, myGame.group, collision, null, this);
+    game.physics.arcade.overlap(myGame.player, myGame.friendGroup, collision, null, this);
 
     // movement
     if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
