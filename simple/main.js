@@ -27,8 +27,11 @@ function create() {
 }
 */
 
-var myGame = {
-};
+function MyGame() {
+    this.moveJob = [];
+
+}
+var myGame = new MyGame();
 
 
 function randomColor() {
@@ -106,10 +109,15 @@ var create = function(game) {
 
 function pickSprite(pointer,sprite) {
     myGame.pickedSprite = sprite;
+    myGame.group.forEachAlive( function(i) {
+//        console.log(i.name);
+    }, this)
 }
 
 function moveSprite(sprite, pointer) {
-    sprite.reset(pointer.x, pointer.y);
+    game.physics.arcade.moveToObject(sprite, pointer);
+    // make a copy of the x,y coords of the pointer
+    myGame.moveJob.push( {sprite:sprite, target:{x:pointer.x, y:pointer.y}});
 }
 
 function onMouseDown(pointer) {
@@ -130,10 +138,27 @@ function collision(a,b) {
     b.kill();
 }
 
-var update = function(game) {    
 
-//    game.physics.arcade.overlap(myGame.player, myGame.wall, collision, null, this);
-//    game.physics.arcade.overlap(myGame.player, myGame.block, collision, null, this);
+// stop the sprites out of the myGame.moveJob array
+// if it reaches the target position
+function updateMove(game) {
+    var x = myGame.moveJob.filter( function(mj) {
+        //console.log(mj.sprite.name);
+        if (game.physics.arcade.distanceToPointer(mj.sprite, mj.target) < 5) {
+            mj.sprite.body.velocity.set(0);
+            // remove that from the moveJob array
+            return false;
+        } else {
+            return true;
+        }
+    });
+    if (x.length != myGame.moveJob.length) {
+        myGame.moveJob = x;
+    }
+
+}
+
+var update = function(game) {    
     game.physics.arcade.overlap(myGame.player, myGame.group, collision, null, this);
     game.physics.arcade.overlap(myGame.player, myGame.friendGroup, collision, null, this);
 
@@ -150,6 +175,8 @@ var update = function(game) {
     else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
       myGame.player.x += myGame.xyDelta;
     }
+
+    updateMove(game);
 }
 
 
