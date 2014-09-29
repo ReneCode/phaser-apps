@@ -53,16 +53,29 @@ var preload = function(game) {
     game.load.spritesheet('characters', 'assets/characters-24-32.gif', 24, 32);
 }
 
-var create = function(game) {
+function getArray(start, cnt) {
+    var arr = [];
+    for (var i=0; i<cnt; i++) {
+        arr.push(start+i);
+    }
+    return arr;
+}
+
+function create(game) {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     myGame.group = game.add.group();
     myGame.group.name = "enemies";
     myGame.group.enableBody = true;
-    for (var i=0; i<5; i++) {
+    var person = 4;
+    var aniLen = 3;
+    for (var i=0; i<8; i++) {
         var sprite = myGame.group.create(20 + i*50, 50,  'characters', 24*i);
-        sprite.name = "A" + (i+1);
+        sprite.name.name = "A" + (i+1);
+        sprite.name.value = 4711 +i;
         sprite.anchor.setTo(0.5, 0.5);
+        sprite.animations.add('run', getArray(person*24 + aniLen*i, aniLen), 3, true);
+        sprite.play('run');
     }
 
 
@@ -115,7 +128,7 @@ function pickSprite(pointer,sprite) {
 }
 
 function moveSprite(sprite, pointer) {
-    game.physics.arcade.moveToObject(sprite, pointer);
+    game.physics.arcade.moveToObject(sprite, pointer, 20);
     // make a copy of the x,y coords of the pointer
     myGame.moveJob.push( {sprite:sprite, target:{x:pointer.x, y:pointer.y}});
 }
@@ -181,7 +194,7 @@ var update = function(game) {
 
 
 function render() {
-    game.debug.spriteCoords(myGame.player, 32, 32);
+//    game.debug.spriteCoords(myGame.player, 32, 32);
 }
 
 var game = new Phaser.Game(500, 400, Phaser.AUTO, 'phaser-example', 

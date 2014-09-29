@@ -3,6 +3,8 @@ phaser-apps
 
 #interlektuelles Völlegefühl#
 
+#Ornt La Okros nimmt anderen die Entscheidung ab.
+
 (formating readme.md: see: https://help.github.com/articles/github-flavored-markdown)
 
 apps bases on the js-framework phaser
@@ -140,4 +142,14 @@ function onMouseDown(pt) {
 }
 ```
 
+----
+
+animation
+
+// sprite loaded by spritesheet
+// create an animation from sprite-image nr. 5,6,7,8 with speed 10
+// and looped (true)
+sprite.animations.add('run', [5,6,7,8], 10, true);
+// start the animation named 'run'
+sprite.play('run');
 
